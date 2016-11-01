@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="main_title" type="id" />
+    <item name="main_tablayout" type="id" />
+    <item name="main_viewpager" type="id" />
+    <item name="weather_title_add" type="id" />
+    <item name="weather_title_flush" type="id" />
+    <item name="weather_title_city" type="id" />
+    <item name="weather_city_recyclerview" type="id" />
+    <item name="item_button" type="id" />
+    <item name="item_textview" type="id" />
+    <item name="weather_ll" type="id" />
+    <item name="weather_high_tmp" type="id" />
+    <item name="weather_detail" type="id" />
+    <item name="weather_detail2" type="id" />
+    <item name="weather_ptime" type="id" />
+    <item name="weather_relative" type="id" />
+    <item name="news_title" type="id" />
+    <item name="news_keywords" type="id" />
+    <item name="news_descripsion" type="id" />
+    <item name="news_fcount" type="id" />
+    <item name="news_count" type="id" />
+    <item name="news_rcount" type="id" />
+    <item name="news_ptime" type="id" />
+    <item name="news_time" type="id" />
+    <item name="news_from" type="id" />
+    <item name="news_tiyu" type="id" />
+    <item name="news_education" type="id" />
+    <item name="news_sports" type="id" />
+    <item name="news_peplelife" type="id" />
+    <item name="news_entertainment" type="id" />
+    <item name="news_economics" type="id" />
+    <item name="news_social" type="id" />
+    <item name="news_foot_title" type="id" />
+    <item name="news_all" type="id" />
+</resources>
