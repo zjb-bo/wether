@@ -1,6 +1,7 @@
 package com.zjb.weather.gui.mvp.model.weather;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
@@ -28,7 +29,7 @@ public class RegionModelImpl implements RegionModelDao {
     private Request mRequest;
     private OnLoadRegionCallback callback;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
@@ -46,6 +47,8 @@ public class RegionModelImpl implements RegionModelDao {
                     break;
                 case 5:
                     callback.loadWeatherCodeSuccess((String) msg.obj);
+                case 6:
+                    callback.loadFailed();
             }
         }
     };
@@ -63,7 +66,7 @@ public class RegionModelImpl implements RegionModelDao {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
-                callback.loadFailed();
+                handler.sendMessage(handler.obtainMessage(6));
             }
             @Override
             public void onResponse(Response response) throws IOException {

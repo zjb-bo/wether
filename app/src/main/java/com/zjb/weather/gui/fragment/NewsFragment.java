@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +46,7 @@ public class NewsFragment extends BaseFragment implements NewsViewDao {
     private boolean isLoading;
     private boolean isNoMoreData;
     private NewsPresenterImpl mNewsPrsenter;
+    private LinearLayoutManager manger;
     //代表新闻的数据分类
     private int topClass = Contanst.NEWS_TYPE_ALL;
 
@@ -65,7 +65,7 @@ public class NewsFragment extends BaseFragment implements NewsViewDao {
         mNewsPrsenter.loadNewsData();
         isLoading = true;
 
-        final LinearLayoutManager manger = new LinearLayoutManager(getActivity());
+        manger = new LinearLayoutManager(getActivity());
         manger.setOrientation(LinearLayout.VERTICAL);
         newsRecyclerview.setLayoutManager(manger);
 
@@ -75,7 +75,6 @@ public class NewsFragment extends BaseFragment implements NewsViewDao {
         newsRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                Log.d("msg", "onScrolled: " + isLoading);
                 if (!isLoading && (manger.findLastVisibleItemPosition() == manger.getItemCount() - 1)) {
                     if (!isNoMoreData) {
                         mNewsPrsenter.loadNewsData();
@@ -93,7 +92,6 @@ public class NewsFragment extends BaseFragment implements NewsViewDao {
         /*列表底部显示正在加载...*/
         Contanst.footerType = 2;
         mAdapter.addMainDatas(news.getTngou(), topClass);
-        Log.d("msg", "newsDataLoadSuccess: " + news.getTngou().get(0).getTitle());
     }
 
     @Override
@@ -162,6 +160,8 @@ public class NewsFragment extends BaseFragment implements NewsViewDao {
                 break;
 
         }
+
+
         view.setBackgroundColor(Color.BLUE);
         currentView = view;
         mNewsPrsenter.loadNewsData();

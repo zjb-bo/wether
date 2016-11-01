@@ -21,6 +21,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.zjb.weather.utils.NewsAdapterUtil.changeType;
+
 /**
  * Created by bobo on 2016/10/30.
  */
@@ -59,23 +61,21 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if(mMainDatas.size() != 0){
             if(topClass == Contanst.NEWS_TYPE_ALL){
-                mCateMainDatas = mMainDatas;
+                mCateMainDatas.clear();
+                mCateMainDatas.addAll(mMainDatas);
             }else{
                 /*如果分类有改变，则清除原来的;
                 * 并且从已经加载好的列表中，找出新的分类**/
                 if(currentTopClass != topClass){
                     currentTopClass = topClass;
                     mCateMainDatas.clear();
-
+                    mCateMainDatas.addAll(NewsAdapterUtil.changeType(mMainDatas,topClass));
                 }
-                //此方法会越来越慢
-                mCateMainDatas = NewsAdapterUtil.changeType(mMainDatas,topClass);
                 /**如果分类没有改变，则下一页中找出当前分类 并且添加到数据中**/
-//                else{
-//                    mCateMainDatas.addAll(NewsAdapterUtil.changeType(mData,topClass));
-//                }
+                else{
+                    mCateMainDatas.addAll(changeType(mData,topClass));
+                }
             }
-
             Log.d("msg", "addCateData: "+mCateMainDatas.size()+"cate");
             Log.d("msg", "addCateData: "+mMainDatas.size()+"all");
         }
@@ -159,6 +159,8 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
+
+
         return mCateMainDatas.size();
     }
 
