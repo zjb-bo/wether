@@ -9,6 +9,6 @@ import com.zjb.weather.R;
 public class PhoneTools extends BaseFragment {
     @Override
     public int getLayoutId() {
-        return R.layout.phonefragment;
+        return R.layout.splash_activity;
     }
 }

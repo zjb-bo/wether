@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Weather</string>
+    <string name="splash_title">天气-新闻-查询APP_Demo</string>
+    <string name="splash_version">当前版本：1.0.0</string>
 </resources>
