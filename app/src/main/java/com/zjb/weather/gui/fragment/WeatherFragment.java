@@ -192,6 +192,11 @@ public class WeatherFragment extends BaseFragment {
 
     private void setRegionOff() {
         weatherCityRecyclerview.setVisibility(View.GONE);
+
+          /**这里不能写layoutParams.bottomMargin = -40;
+           * 只能像下面这样写、、、**/
+//        int height = 40;
+//        layoutParams.bottomMargin = -height;
     }
 
     private void setRegionOn() {

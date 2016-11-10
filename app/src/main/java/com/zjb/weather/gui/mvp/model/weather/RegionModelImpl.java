@@ -47,8 +47,10 @@ public class RegionModelImpl implements RegionModelDao {
                     break;
                 case 5:
                     callback.loadWeatherCodeSuccess((String) msg.obj);
+                    break;
                 case 6:
                     callback.loadFailed();
+                    break;
             }
         }
     };

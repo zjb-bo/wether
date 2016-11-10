@@ -2,7 +2,6 @@ package com.zjb.weather.gui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +48,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         mMainDatas.addAll(mData);
         addCateData(mData,topClass);
         notifyDataSetChanged();
+
     }
 
     /**
@@ -58,6 +58,11 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private int currentTopClass = -1;
     public void addCateData(List<NewsData.TngouBean> mData,int topClass){
 
+        /**判断除了全部新闻以外的栏目  在当前页的条数为0 的话 就回调 加载下一页*/
+        if(topClass != Contanst.NEWS_TYPE_ALL &&
+                NewsAdapterUtil.changeType(mData,topClass).size() == 0){
+            dataSizeListener.currentDataSize();
+        }
 
         if(mMainDatas.size() != 0){
             if(topClass == Contanst.NEWS_TYPE_ALL){
@@ -76,10 +81,24 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     mCateMainDatas.addAll(changeType(mData,topClass));
                 }
             }
-            Log.d("msg", "addCateData: "+mCateMainDatas.size()+"cate");
-            Log.d("msg", "addCateData: "+mMainDatas.size()+"all");
         }
+        /**
+         * 加载每一个除了全部数据以外的每一个栏目的条数 小于3的话 就回调 加载下一页
+         */
+        if(NewsAdapterUtil.changeType(mMainDatas,topClass).size() < 3){
+            dataSizeListener.currentDataSize();
+        }
+
     }
+
+    private OnDataSizeIsZero dataSizeListener;
+    public void setOnDataSizeIsZeroListener(OnDataSizeIsZero dataSizeListener){
+        this.dataSizeListener = dataSizeListener;
+    }
+    public interface OnDataSizeIsZero{
+        void currentDataSize();
+    }
+
 
 
     public int getHeadaerItem() {
@@ -118,6 +137,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
+
         switch (viewType) {
             case HEADER_ITEM:
                 break;
@@ -160,7 +180,6 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public int getItemCount() {
 
-
         return mCateMainDatas.size();
     }
 
@@ -182,9 +201,18 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         @BindView(R.id.news_from)
         TextView newsFrom;
 
-        ContentViewHolder(View view) {
+        ContentViewHolder(final View view) {
             super(view);
             ButterKnife.bind(this, view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        listener.itemClick(getAdapterPosition(),view,
+                                mCateMainDatas.get(getAdapterPosition()).getFromurl());
+                    }
+                }
+            });
         }
     }
 
@@ -194,9 +222,21 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         @BindView(R.id.news_foot_progressBar)
         ProgressBar newsFootProgressBar;
 
-        FooterViewHolder(View view) {
+        FooterViewHolder( View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
+    }
+
+
+    /****
+     * 对RecyclView的Item进行点击监听
+     */
+    private OnItemListener listener;
+    public void setOnItemListener(OnItemListener listener){
+        this.listener = listener;
+    }
+    public interface OnItemListener{
+        void itemClick(int position,View view,String fromUrl);
     }
 }

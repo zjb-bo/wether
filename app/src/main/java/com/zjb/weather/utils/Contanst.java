@@ -16,7 +16,7 @@ public class Contanst {
     * 默认为 -1；
     * */
     public static int footerType = -1;
-
+    public static boolean dataSize = false;
     /**
      * 新闻数据分类
      */

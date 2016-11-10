@@ -1,5 +1,6 @@
 package com.zjb.weather.gui.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.zjb.weather.R;
 import com.zjb.weather.entry.NewsData;
+import com.zjb.weather.gui.activity.NewsDetailActivity;
 import com.zjb.weather.gui.adapter.NewsRecyclerAdapter;
 import com.zjb.weather.gui.mvp.presenter.news.NewsPresenterImpl;
 import com.zjb.weather.gui.mvp.view.news.NewsViewDao;
@@ -26,7 +28,7 @@ import butterknife.OnClick;
  * Created by Administrator on 2016/10/24.
  */
 
-public class NewsFragment extends BaseFragment implements NewsViewDao {
+public class NewsFragment extends BaseFragment implements NewsViewDao, NewsRecyclerAdapter.OnItemListener {
     RecyclerView newsRecyclerview;
     @BindView(R.id.news_all)
     TextView newsAll;
@@ -72,6 +74,7 @@ public class NewsFragment extends BaseFragment implements NewsViewDao {
         mAdapter = new NewsRecyclerAdapter(getActivity());
         newsRecyclerview.setAdapter(mAdapter);
 
+
         newsRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -83,10 +86,21 @@ public class NewsFragment extends BaseFragment implements NewsViewDao {
                 }
             }
         });
+
+        /**设置item监听*/
+        mAdapter.setOnItemListener(this);
+        /**设置当前选中类的*/
+        mAdapter.setOnDataSizeIsZeroListener(new NewsRecyclerAdapter.OnDataSizeIsZero() {
+            @Override
+            public void currentDataSize() {
+                    mNewsPrsenter.loadNewsData();
+            }
+        });
     }
 
     @Override
     public void newsDataLoadSuccess(NewsData news) {
+
         isLoading = false;
         isNoMoreData = false;
         /*列表底部显示正在加载...*/
@@ -98,6 +112,7 @@ public class NewsFragment extends BaseFragment implements NewsViewDao {
     public void newsDataLoadFailed() {
         isLoading = false;
         isNoMoreData = false;
+
 
         /*列表底部显示加载失败*/
         Contanst.footerType = 1;
@@ -132,8 +147,10 @@ public class NewsFragment extends BaseFragment implements NewsViewDao {
     @OnClick({R.id.news_all, R.id.news_sports, R.id.news_education,
             R.id.news_peplelife, R.id.news_entertainment, R.id.news_economics, R.id.news_social})
     public void onClick(View view) {
+        if(currentView == view)return;
+
         if(currentView != null){
-            currentView.setBackgroundColor(Color.GRAY);
+            currentView.setBackgroundResource(R.drawable.news_item_description);
         }
 
         switch (view.getId()){
@@ -160,13 +177,16 @@ public class NewsFragment extends BaseFragment implements NewsViewDao {
                 break;
 
         }
-
-
         view.setBackgroundColor(Color.BLUE);
         currentView = view;
         mNewsPrsenter.loadNewsData();
     }
 
 
-
+    @Override
+    public void itemClick(int position, View view, String fromUrl) {
+        Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+        intent.putExtra("fromUrl",fromUrl);
+        getActivity().startActivity(intent);
+    }
 }
